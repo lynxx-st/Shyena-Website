@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const links = [
   ["Home", "/"],
@@ -17,10 +17,27 @@ export const Header = () => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
   const { resolvedTheme, setTheme } = useTheme();
   const theme = mounted && resolvedTheme === "light" ? "light" : "dark";
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -44,6 +61,7 @@ export const Header = () => {
         <nav
           aria-label="Main navigation"
           className={open ? "nav-links is-open" : "nav-links"}
+          id="site-navigation"
         >
           {links.map(([label, href]) => {
             const active =
@@ -78,10 +96,12 @@ export const Header = () => {
             <span aria-hidden="true">{theme === "dark" ? "☼" : "◐"}</span>
           </button>
           <button
+            aria-controls="site-navigation"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
             className="menu-toggle"
             onClick={() => setOpen(!open)}
+            ref={menuToggleRef}
             type="button"
           >
             <span />

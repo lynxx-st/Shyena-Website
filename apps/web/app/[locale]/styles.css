@@ -2,6 +2,9 @@
 @source "../**/*.{ts,tsx}";
 
 :root {
+  --motion-fast: 160ms;
+  --motion-standard: 240ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --bg: #09090b;
   --surface: #101115;
   --raised: #17191f;
@@ -69,6 +72,9 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--accent) var(--bg);
+  scrollbar-width: auto;
 }
 body {
   margin: 0;
@@ -2435,5 +2441,137 @@ h3 {
   }
   .footer-bottom {
     gap: 6px;
+  }
+}
+
+/* Global finish: restrained motion, consistent scrollbars and route loading. */
+html::-webkit-scrollbar {
+  width: 12px;
+}
+html::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+html::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 999px;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-strong);
+}
+a,
+button,
+.work-card,
+.project-card {
+  transition-timing-function: var(--ease-standard);
+}
+a,
+button {
+  transition-duration: var(--motion-fast);
+}
+#main {
+  animation: route-content-enter var(--motion-standard) var(--ease-standard)
+    both;
+}
+.route-loading {
+  display: grid;
+  gap: 20px;
+  place-content: center;
+  justify-items: center;
+  min-height: min(62svh, 560px);
+  color: var(--muted-text);
+}
+.route-loading-status {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+}
+.route-loading-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  font:
+    500 16px / 1 var(--font-serif),
+    serif;
+  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.route-loading-mark span {
+  color: var(--quiet);
+}
+.route-loading-track {
+  width: clamp(136px, 32vw, 200px);
+  height: 2px;
+  overflow: hidden;
+  background: var(--line);
+}
+.route-loading-track span {
+  display: block;
+  width: 34%;
+  height: 100%;
+  background: var(--accent);
+  animation: loading-sweep 1.3s var(--ease-standard) infinite;
+}
+@keyframes route-content-enter {
+  from {
+    opacity: 0.72;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes loading-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(310%);
+  }
+}
+@media (max-width: 800px) {
+  .nav-links {
+    display: flex;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition:
+      opacity var(--motion-fast) var(--ease-standard),
+      transform var(--motion-fast) var(--ease-standard),
+      visibility 0s linear var(--motion-fast);
+  }
+  .nav-links.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+}
+@media (max-width: 600px) {
+  .route-loading {
+    min-height: min(54svh, 420px);
+  }
+  .route-loading-status {
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #main {
+    animation: none;
+  }
+  .button:hover,
+  .work-card:hover,
+  .project-card:hover {
+    transform: none;
+  }
+  .route-loading-track span {
+    width: 34%;
+    transform: none;
   }
 }
