@@ -1,16 +1,22 @@
-# React + Vite
+# Shyena Technologies Pvt. Ltd. website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Company website for Shyena Technologies Pvt. Ltd., built with Next.js and the NextForge monorepo modules used by this project.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install [Bun](https://bun.sh/), copy `apps/web/.env.example` to `apps/web/.env`, and set the values needed for the features you use. `NEXT_PUBLIC_GA_MEASUREMENT_ID` is the Google Analytics 4 measurement ID; leave it empty to disable Analytics. Then run:
 
-## React Compiler
+```sh
+bun install
+bun run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The site runs at `http://localhost:3001`. Build it with `bun run --filter web build` and check types with `bun run --filter web typecheck`.
 
-## Expanding the ESLint configuration
+## Site content
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The public website lives in `apps/web`. It includes the company, services, projects, journal, contact, terms, and privacy pages. The journal is configured through `.pages.yml` and content files in `apps/web/content/posts`.
+
+## Contact
+
+Shyena Technologies Pvt. Ltd. — [whois@shyenasec.com](mailto:whois@shyenasec.com)

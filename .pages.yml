@@ -1,0 +1,38 @@
+media:
+  input: apps/web/public/uploads
+  output: /uploads
+content:
+  - name: journal
+    label: Journal
+    type: collection
+    path: apps/web/content/posts
+    filename: "{slug}.md"
+    format: yaml-frontmatter
+    view:
+      primary: title
+      sort: date
+      order: desc
+    fields:
+      - name: slug
+        label: URL slug
+        type: string
+        required: true
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Publication date
+        type: date
+        required: true
+      - name: description
+        label: Summary
+        type: text
+        required: true
+      - name: published
+        label: Published
+        type: boolean
+      - name: body
+        label: Article
+        type: rich-text
+        required: true
