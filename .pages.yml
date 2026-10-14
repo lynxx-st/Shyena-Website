@@ -1,6 +1,3 @@
-media:
-  input: apps/web/public/uploads
-  output: /uploads
 content:
   - name: journal
     label: Journal
@@ -17,6 +14,12 @@ content:
         label: URL slug
         type: string
         required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Use lowercase words separated by hyphens.
+        options:
+          minlength: 3
+          maxlength: 80
       - name: title
         label: Title
         type: string
@@ -30,9 +33,12 @@ content:
         type: text
         required: true
       - name: published
-        label: Published
+        label: Publish this article
         type: boolean
       - name: body
         label: Article
         type: rich-text
         required: true
+        options:
+          format: markdown
+          media: false

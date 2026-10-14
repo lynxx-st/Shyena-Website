@@ -1,3 +1,10 @@
+import { Badge } from "@repo/design-system/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+} from "@repo/design-system/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,6 +23,8 @@ const projects = [
     summary:
       "A capture-the-flag platform for hands-on cybersecurity challenges and learning.",
     href: "/projects/flagforge",
+    availability: "Public",
+    slug: "flagforge",
   },
   {
     name: "SecYourFlow",
@@ -23,6 +32,8 @@ const projects = [
     summary:
       "A workflow product for organizing security assets, vulnerabilities, and risk context.",
     href: "/projects/secyourflow",
+    availability: "Available privately",
+    slug: "secyourflow",
   },
 ];
 
@@ -43,15 +54,14 @@ export default function ProjectsPage() {
         <div className="section-pad container">
           <div className="project-grid">
             {projects.map((project) => (
-              <Link
-                className="project-card"
-                href={project.href}
+              <Card
+                className="project-card project-index-card"
                 key={project.name}
               >
-                <div className="project-card-top">
-                  <span className="project-kicker">{project.category}</span>
-                </div>
-                <div aria-hidden="true" className="project-art">
+                <div
+                  aria-hidden="true"
+                  className={`project-art project-art-${project.slug}`}
+                >
                   <Image
                     alt=""
                     className={`project-logo project-logo-${project.name === "FlagForge" ? "flagforge" : "secyourflow"}`}
@@ -60,15 +70,22 @@ export default function ProjectsPage() {
                     width={160}
                   />
                 </div>
-                <div className="project-card-copy">
-                  <h2>{project.name}</h2>
+                <CardContent className="project-card-copy project-index-copy">
+                  <Badge className="project-card-status" variant="outline">
+                    {project.availability}
+                  </Badge>
+                  <p className="project-kicker">{project.category}</p>
+                  <h2>
+                    <Link href={project.href}>{project.name}</Link>
+                  </h2>
                   <p>{project.summary}</p>
-                </div>
-                <div className="project-card-link">
-                  <span>View project</span>
-                  <span aria-hidden="true">→</span>
-                </div>
-              </Link>
+                </CardContent>
+                <CardFooter className="project-index-footer">
+                  <Link className="project-card-link" href={project.href}>
+                    View project details <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>

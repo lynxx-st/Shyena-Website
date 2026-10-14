@@ -67,10 +67,9 @@ export default function LocaleLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="system"
+          attribute="class"
+          defaultTheme="dark"
           disableTransitionOnChange
-          enableSystem
           storageKey="shyena-theme"
         >
           <AnalyticsProvider>

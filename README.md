@@ -17,6 +17,8 @@ The site runs at `http://localhost:3001`. Build it with `bun run --filter web bu
 
 The public website lives in `apps/web`. It includes the company, services, projects, journal, contact, terms, and privacy pages. The journal is configured through `.pages.yml` and content files in `apps/web/content/posts`.
 
+For editor setup and the blog publishing workflow, see [the journal guide](docs/editorial/README.md).
+
 ## Contact
 
 Shyena Technologies Pvt. Ltd. — [whois@shyenasec.com](mailto:whois@shyenasec.com)

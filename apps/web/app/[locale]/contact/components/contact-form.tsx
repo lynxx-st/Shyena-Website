@@ -3,13 +3,20 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/design-system/components/ui/select";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { useActionState } from "react";
 import { type ContactState, submitContact } from "../actions/contact";
 
 const initialState: ContactState = { status: "idle" };
 
-export function ContactForm() {
+export function ContactForm({ initialTopic = "" }: { initialTopic?: string }) {
   const [state, formAction, pending] = useActionState(
     submitContact,
     initialState
@@ -40,19 +47,38 @@ export function ContactForm() {
       </div>
       <div className="form-field">
         <Label htmlFor="contact-topic">What would you like to discuss?</Label>
-        <select defaultValue="" id="contact-topic" name="topic" required>
-          <option disabled value="">
-            Choose a topic
-          </option>
-          <option value="Security services">Security services</option>
-          <option value="FlagForge">FlagForge</option>
-          <option value="SecYourFlow demo">SecYourFlow demo</option>
-          <option value="Other inquiry">Other inquiry</option>
-        </select>
+        <Select defaultValue={initialTopic} name="topic" required>
+          <SelectTrigger className="contact-select-trigger" id="contact-topic">
+            <SelectValue placeholder="Choose a topic" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Security services">Security services</SelectItem>
+            <SelectItem value="Hardware VAPT">Hardware VAPT</SelectItem>
+            <SelectItem value="OT / ICS assessment">
+              OT / ICS assessment
+            </SelectItem>
+            <SelectItem value="IoT security testing">
+              IoT security testing
+            </SelectItem>
+            <SelectItem value="SCADA network testing">
+              SCADA network testing
+            </SelectItem>
+            <SelectItem value="Red team operations">
+              Red team operations
+            </SelectItem>
+            <SelectItem value="Compliance & risk advisory">
+              Compliance &amp; risk advisory
+            </SelectItem>
+            <SelectItem value="FlagForge">FlagForge</SelectItem>
+            <SelectItem value="SecYourFlow demo">SecYourFlow demo</SelectItem>
+            <SelectItem value="Other inquiry">Other inquiry</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="form-field">
         <Label htmlFor="contact-message">A little context</Label>
         <Textarea
+          aria-describedby="contact-message-guidance"
           id="contact-message"
           maxLength={5000}
           minLength={20}
@@ -61,7 +87,7 @@ export function ContactForm() {
           required
           rows={6}
         />
-        <span className="form-help">
+        <span className="form-help" id="contact-message-guidance">
           Please don’t include passwords, access tokens or other secrets.
         </span>
       </div>
@@ -76,7 +102,6 @@ export function ContactForm() {
       </div>
       {state.status !== "idle" && (
         <p
-          aria-live="polite"
           className={`form-status ${state.status === "error" ? "error" : ""}`}
           role={state.status === "error" ? "alert" : "status"}
         >

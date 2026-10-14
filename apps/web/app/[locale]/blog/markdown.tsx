@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 const lineBreakPattern = /\r?\n/;
 const headingPattern = /^(#{2,3})\s+(.+)$/;
 const bulletPattern = /^[-*]\s+(.+)$/;
+const orderedPattern = /^\d+[.)]\s+(.+)$/;
+const quotePattern = /^>\s?(.*)$/;
 const inlinePattern =
   /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|`([^`]+)`|\*([^*]+)\*/g;
 
@@ -11,6 +13,8 @@ export function Markdown({ source }: { source: string }) {
   const blocks: ReactNode[] = [];
   let paragraph: string[] = [];
   let list: string[] = [];
+  let orderedList: string[] = [];
+  let quote: string[] = [];
 
   const flushParagraph = () => {
     if (paragraph.length) {
@@ -32,18 +36,44 @@ export function Markdown({ source }: { source: string }) {
       list = [];
     }
   };
+  const flushOrderedList = () => {
+    if (orderedList.length) {
+      blocks.push(
+        <ol key={`ol-${blocks.length}`}>
+          {orderedList.map((item) => (
+            <li key={item}>{inline(item)}</li>
+          ))}
+        </ol>
+      );
+      orderedList = [];
+    }
+  };
+  const flushQuote = () => {
+    if (quote.length) {
+      blocks.push(
+        <blockquote key={`quote-${blocks.length}`}>
+          <p>{inline(quote.join(" "))}</p>
+        </blockquote>
+      );
+      quote = [];
+    }
+  };
+  const flushBlocks = () => {
+    flushParagraph();
+    flushList();
+    flushOrderedList();
+    flushQuote();
+  };
 
   for (const line of lines) {
     const trimmed = line.trim();
     if (!trimmed) {
-      flushParagraph();
-      flushList();
+      flushBlocks();
       continue;
     }
     const heading = trimmed.match(headingPattern);
     if (heading) {
-      flushParagraph();
-      flushList();
+      flushBlocks();
       const title = inline(heading[2]);
       blocks.push(
         heading[1].length === 2 ? (
@@ -57,14 +87,33 @@ export function Markdown({ source }: { source: string }) {
     const bullet = trimmed.match(bulletPattern);
     if (bullet) {
       flushParagraph();
+      flushOrderedList();
+      flushQuote();
       list.push(bullet[1]);
       continue;
     }
+    const ordered = trimmed.match(orderedPattern);
+    if (ordered) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      orderedList.push(ordered[1]);
+      continue;
+    }
+    const quoted = trimmed.match(quotePattern);
+    if (quoted) {
+      flushParagraph();
+      flushList();
+      flushOrderedList();
+      quote.push(quoted[1]);
+      continue;
+    }
     flushList();
+    flushOrderedList();
+    flushQuote();
     paragraph.push(trimmed);
   }
-  flushParagraph();
-  flushList();
+  flushBlocks();
   return <>{blocks}</>;
 }
 

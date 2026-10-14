@@ -1,5 +1,23 @@
+import { Badge } from "@repo/design-system/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/design-system/components/ui/breadcrumb";
+import { Button } from "@repo/design-system/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/design-system/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "FlagForge CTF",
@@ -18,6 +36,19 @@ export default function FlagForgePage() {
     <main id="main">
       <section className="page-hero">
         <div className="container">
+          <Breadcrumb className="route-breadcrumb">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/projects">Projects</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>FlagForge</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <Image
             alt="FlagForge logo"
             className="project-page-logo project-logo-flagforge"
@@ -32,6 +63,18 @@ export default function FlagForgePage() {
             challenges designed to help people explore security concepts through
             practice.
           </p>
+          <Badge className="project-status" variant="outline">
+            Public platform
+          </Badge>
+          <Button asChild className="project-detail-cta">
+            <a
+              href="https://www.flagforgectf.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Visit FlagForge <ArrowUpRight aria-hidden="true" />
+            </a>
+          </Button>
         </div>
       </section>
       <section className="section-pad container content-grid">
@@ -54,46 +97,40 @@ export default function FlagForgePage() {
             Visit the public platform to see current challenges and available
             information.
           </p>
-          <p>
-            <a
-              className="button button-primary"
-              href="https://www.flagforgectf.com/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Visit FlagForge <span aria-hidden="true">↗</span>
-            </a>
-          </p>
         </div>
-        <aside className="info-panel">
-          <h2>Project details</h2>
-          <dl className="info-list">
-            <div>
-              <dt>Type</dt>
-              <dd>Cybersecurity learning platform</dd>
-            </div>
-            <div>
-              <dt>Availability</dt>
-              <dd>Public</dd>
-            </div>
-            <div>
-              <dt>Website</dt>
-              <dd>
-                <a
-                  href="https://www.flagforgectf.com/"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  flagforgectf.com ↗
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt>Built by</dt>
-              <dd>Shyena Technologies Pvt. Ltd.</dd>
-            </div>
-          </dl>
-        </aside>
+        <Card className="info-panel">
+          <CardHeader className="company-info-header">
+            <CardTitle>Project details</CardTitle>
+          </CardHeader>
+          <CardContent className="company-info-content">
+            <dl className="info-list">
+              <div>
+                <dt>Type</dt>
+                <dd>Cybersecurity learning platform</dd>
+              </div>
+              <div>
+                <dt>Availability</dt>
+                <dd>Public</dd>
+              </div>
+              <div>
+                <dt>Website</dt>
+                <dd>
+                  <a
+                    href="https://www.flagforgectf.com/"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    flagforgectf.com ↗
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt>Built by</dt>
+                <dd>Shyena Technologies Pvt. Ltd.</dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
       </section>
     </main>
   );

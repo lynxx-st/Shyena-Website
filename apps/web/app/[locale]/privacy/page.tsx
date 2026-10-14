@@ -1,3 +1,8 @@
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/design-system/components/ui/alert";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,12 +25,14 @@ export default function PrivacyDraftPage() {
       </section>
       <section className="section-pad container">
         <div className="legal-copy">
-          <p className="legal-note">
-            <strong>Review copy — not approved for public use.</strong> The
-            final notice depends on the services and analytics enabled at
-            launch. Legal review and confirmation of the items below are
-            required before this page is published.
-          </p>
+          <Alert className="legal-review-alert">
+            <AlertTitle>Review draft — not approved for publication</AlertTitle>
+            <AlertDescription>
+              The final notice depends on the services and analytics enabled at
+              launch. Legal review and confirmation of the items below are
+              required before publication.
+            </AlertDescription>
+          </Alert>
           <h2>Information submitted through the contact form</h2>
           <p>
             The form asks for your name, email address, inquiry topic and

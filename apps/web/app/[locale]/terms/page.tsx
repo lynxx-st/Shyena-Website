@@ -1,3 +1,8 @@
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/design-system/components/ui/alert";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,12 +25,14 @@ export default function TermsDraftPage() {
       </section>
       <section className="section-pad container">
         <div className="legal-copy">
-          <p className="legal-note">
-            <strong>Review copy — not approved for public use.</strong> These
-            draft notes cover this website only. Legal review is required before
-            publication, and separate terms may be needed for services,
-            FlagForge or SecYourFlow.
-          </p>
+          <Alert className="legal-review-alert">
+            <AlertTitle>Review draft — not approved for publication</AlertTitle>
+            <AlertDescription>
+              These draft notes cover this website only. Legal review is
+              required before publication, and separate terms may be needed for
+              services, FlagForge or SecYourFlow.
+            </AlertDescription>
+          </Alert>
           <h2>Using this website</h2>
           <p>
             This website provides general information about Shyena Technologies

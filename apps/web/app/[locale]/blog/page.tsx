@@ -1,3 +1,11 @@
+import { Badge } from "@repo/design-system/components/ui/badge";
+import { Button } from "@repo/design-system/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+} from "@repo/design-system/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getJournalPosts } from "./content";
@@ -25,22 +33,41 @@ export default async function JournalPage() {
       </section>
       <section className="section-pad container">
         {posts.length ? (
-          <div className="journal-grid">
+          <div
+            className={
+              posts.length === 1
+                ? "journal-grid journal-grid-featured"
+                : "journal-grid"
+            }
+          >
             {posts.map((post) => (
-              <Link
-                className="journal-card"
-                href={`/blog/${post.slug}`}
-                key={post.slug}
-              >
-                <time className="journal-date" dateTime={post.date}>
-                  {formatDate(post.date)}
-                </time>
-                <h2>{post.title}</h2>
-                <p>{post.description}</p>
-                <span className="journal-read">
-                  Read the article <span aria-hidden="true">→</span>
-                </span>
-              </Link>
+              <Card className="journal-card" key={post.slug}>
+                <CardContent className="journal-card-content">
+                  <div className="journal-meta">
+                    <time className="journal-date" dateTime={post.date}>
+                      {formatDate(post.date)}
+                    </time>
+                    <Badge className="journal-badge" variant="outline">
+                      {post.readingTimeMinutes} min read
+                    </Badge>
+                  </div>
+                  <h2>
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h2>
+                  <p>{post.description}</p>
+                </CardContent>
+                <CardFooter className="journal-card-footer">
+                  <Button
+                    asChild
+                    className="journal-read-button"
+                    variant="link"
+                  >
+                    <Link href={`/blog/${post.slug}`}>
+                      Read article <ArrowUpRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         ) : (
