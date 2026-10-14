@@ -1,17 +1,6 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@repo/design-system/components/ui/card";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Cpu,
-  ShieldCheck,
-  Workflow,
-} from "lucide-react";
+import { Badge } from "@repo/design-system/components/ui/badge";
+import { Card, CardContent } from "@repo/design-system/components/ui/card";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +9,7 @@ import { FAQ } from "./components/faq";
 import { Hero } from "./components/hero";
 
 export const metadata: Metadata = {
-  title: "Cybersecurity across software, devices and operations",
+  title: "Cybersecurity for connected systems",
   description:
     "Shyena Technologies Pvt. Ltd. works across software security, connected devices and operational technology, alongside security products and hands-on learning.",
   alternates: { canonical: "/" },
@@ -28,31 +17,46 @@ export const metadata: Metadata = {
 
 const workAreas = [
   {
-    key: "software",
-    icon: ShieldCheck,
-    title: "Software security",
+    key: "hardware-vapt",
+    id: "hardware-vapt",
+    title: "Hardware VAPT",
     description:
-      "Security assessment and engineering support for software and the systems built around it.",
-    href: "/contact",
-    action: "Discuss an engagement",
+      "Review hardware, firmware and exposed debug interfaces to understand practical attack paths.",
   },
   {
-    key: "systems",
-    icon: Cpu,
-    title: "Devices and OT",
+    key: "ot-ics-assessment",
+    id: "ot-ics-assessment",
+    title: "OT / ICS assessment",
     description:
-      "Security work where software connects to hardware, embedded devices and operational technology.",
-    href: "/about",
-    action: "About our focus",
+      "Assess industrial control environments, including PLC, DCS and SCADA components, within an agreed scope.",
   },
   {
-    key: "products",
-    icon: Workflow,
-    title: "Security products & learning",
+    key: "iot-security",
+    id: "iot-security",
+    title: "IoT security testing",
     description:
-      "FlagForge supports hands-on practice. SecYourFlow is available privately by demo.",
-    href: "/projects",
-    action: "See our projects",
+      "Review device interfaces, firmware, companion applications and connected services as applicable.",
+  },
+  {
+    key: "scada-penetration-testing",
+    id: "scada-penetration-testing",
+    title: "SCADA network testing",
+    description:
+      "Test protocol exposure, network segmentation and access controls in a controlled engagement.",
+  },
+  {
+    key: "red-team-operations",
+    id: "red-team-operations",
+    title: "Red team operations",
+    description:
+      "Exercise agreed attack paths across connected IT and OT environments with operational constraints in scope.",
+  },
+  {
+    key: "compliance-risk-advisory",
+    id: "compliance-risk-advisory",
+    title: "Compliance & risk advisory",
+    description:
+      "Identify security gaps and give teams a practical, prioritized path for risk treatment.",
   },
 ];
 
@@ -67,33 +71,31 @@ export default function Home() {
         id="services"
       >
         <div className="section-heading">
-          <h2 id="work-title">Where security meets software and devices.</h2>
+          <h2 id="work-title">
+            Assessment and advisory for connected systems.
+          </h2>
           <p className="section-summary">
-            Security services, products and practical learning across software,
-            connected devices and operational technology.
+            Hardware, device, and operational technology security work, planned
+            around an agreed scope.
           </p>
         </div>
-        <div className="work-grid">
-          {workAreas.map((area) => (
-            <Card
-              className={`work-card work-card-${area.key}`}
-              key={area.title}
-            >
-              <CardHeader className="work-card-header">
+        <div className="service-list">
+          {workAreas.map((area, index) => (
+            <article className="service-item" id={area.id} key={area.id}>
+              <div className="service-item-heading">
+                <span aria-hidden="true" className="service-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <h3>{area.title}</h3>
-                <CardAction aria-hidden="true" className="work-card-icon">
-                  <area.icon />
-                </CardAction>
-              </CardHeader>
-              <CardContent className="work-card-content">
-                <p>{area.description}</p>
-              </CardContent>
-              <CardFooter className="work-card-footer">
-                <Link className="work-card-link" href={area.href}>
-                  {area.action} <ArrowUpRight aria-hidden="true" />
-                </Link>
-              </CardFooter>
-            </Card>
+              </div>
+              <p>{area.description}</p>
+              <Link
+                className="service-link"
+                href={`/contact?topic=${encodeURIComponent(area.title)}`}
+              >
+                Discuss this service <ArrowUpRight aria-hidden="true" />
+              </Link>
+            </article>
           ))}
         </div>
       </section>
@@ -112,10 +114,7 @@ export default function Home() {
             </p>
           </div>
           <div className="project-grid">
-            <Link
-              className="project-card project-flagforge"
-              href="/projects/flagforge"
-            >
+            <Card className="project-card project-flagforge">
               <div aria-hidden="true" className="project-art project-art-forge">
                 <Image
                   alt=""
@@ -125,21 +124,22 @@ export default function Home() {
                   width={160}
                 />
               </div>
-              <div className="project-card-copy">
+              <CardContent className="project-card-copy">
+                <Badge className="project-card-status" variant="outline">
+                  Public
+                </Badge>
                 <h3>FlagForge</h3>
                 <p>
                   Capture-the-flag challenges across web security, cryptography,
                   reverse engineering and forensics.
                 </p>
                 <span className="project-card-link">
-                  Project details <ArrowUpRight aria-hidden="true" />
+                  <Link href="/projects/flagforge">Project details</Link>{" "}
+                  <ArrowUpRight aria-hidden="true" />
                 </span>
-              </div>
-            </Link>
-            <Link
-              className="project-card project-secyourflow"
-              href="/projects/secyourflow"
-            >
+              </CardContent>
+            </Card>
+            <Card className="project-card project-secyourflow">
               <div aria-hidden="true" className="project-art project-art-flow">
                 <Image
                   alt=""
@@ -149,17 +149,21 @@ export default function Home() {
                   width={160}
                 />
               </div>
-              <div className="project-card-copy">
+              <CardContent className="project-card-copy">
+                <Badge className="project-card-status" variant="outline">
+                  Available privately
+                </Badge>
                 <h3>SecYourFlow</h3>
                 <p>
                   A private security workflow project. Contact us to ask for a
                   demonstration.
                 </p>
                 <span className="project-card-link">
-                  Request a demo <ArrowUpRight aria-hidden="true" />
+                  <Link href="/projects/secyourflow">Request a demo</Link>{" "}
+                  <ArrowUpRight aria-hidden="true" />
                 </span>
-              </div>
-            </Link>
+              </CardContent>
+            </Card>
           </div>
           <Link className="all-projects-link" href="/projects">
             Browse all project details <ArrowRight aria-hidden="true" />

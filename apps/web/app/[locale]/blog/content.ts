@@ -5,6 +5,7 @@ export interface JournalPost {
   body: string;
   date: string;
   description: string;
+  readingTimeMinutes: number;
   slug: string;
   title: string;
 }
@@ -16,6 +17,7 @@ const frontmatterPattern = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/;
 const fieldPattern = /^([a-zA-Z][\w-]*):\s*(.*?)\s*$/;
 const quotePattern = /^(["'])(.*)\1$/;
 const newlinePattern = /\r?\n/;
+const whitespacePattern = /\s+/;
 
 export async function getJournalPosts(): Promise<JournalPost[]> {
   let filenames: string[];
@@ -69,17 +71,21 @@ function parsePost(raw: string, slug: string): JournalPost | null {
 
   if (
     fields.published !== "true" ||
+    fields.slug !== slug ||
     !fields.title ||
     !fields.date ||
     !fields.description
   ) {
     return null;
   }
+  const body = match[2].trim();
+  const wordCount = body.split(whitespacePattern).filter(Boolean).length;
   return {
     slug,
     title: fields.title,
     date: fields.date,
     description: fields.description,
-    body: match[2].trim(),
+    body,
+    readingTimeMinutes: Math.max(1, Math.ceil(wordCount / 220)),
   };
 }

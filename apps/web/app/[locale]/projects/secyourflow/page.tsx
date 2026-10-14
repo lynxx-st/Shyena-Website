@@ -1,5 +1,23 @@
+import { Badge } from "@repo/design-system/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/design-system/components/ui/breadcrumb";
+import { Button } from "@repo/design-system/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/design-system/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "SecYourFlow",
@@ -21,6 +39,19 @@ export default function SecYourFlowPage() {
     <main id="main">
       <section className="page-hero">
         <div className="container">
+          <Breadcrumb className="route-breadcrumb">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/projects">Projects</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>SecYourFlow</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <Image
             alt="SecYourFlow logo"
             className="project-page-logo project-logo-secyourflow"
@@ -34,6 +65,14 @@ export default function SecYourFlowPage() {
             SecYourFlow is a security workflow product designed to bring
             essential security information into a clearer, more connected view.
           </p>
+          <Badge className="project-status" variant="outline">
+            Available privately
+          </Badge>
+          <Button asChild className="project-detail-cta">
+            <a href="mailto:whois@shyenasec.com?subject=SecYourFlow%20demo%20request">
+              Request a demonstration <ArrowUpRight aria-hidden="true" />
+            </a>
+          </Button>
         </div>
       </section>
       <section className="section-pad container content-grid">
@@ -54,42 +93,38 @@ export default function SecYourFlowPage() {
             SecYourFlow is available privately. Email us to request a
             demonstration.
           </p>
-          <p>
-            <a
-              className="button button-primary"
-              href="mailto:whois@shyenasec.com?subject=SecYourFlow%20demo%20request"
-            >
-              Request a demo <span aria-hidden="true">↗</span>
-            </a>
-          </p>
         </div>
-        <aside className="info-panel">
-          <h2>Project details</h2>
-          <dl className="info-list">
-            <div>
-              <dt>Type</dt>
-              <dd>Security workflow product</dd>
-            </div>
-            <div>
-              <dt>Availability</dt>
-              <dd>Available privately</dd>
-            </div>
-            <div>
-              <dt>Capabilities</dt>
-              <dd>
-                Assets, vulnerabilities, risk context, and compliance mapping
-              </dd>
-            </div>
-            <div>
-              <dt>Request</dt>
-              <dd>
-                <a href="mailto:whois@shyenasec.com?subject=SecYourFlow%20demo%20request">
-                  Email to request a demo
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </aside>
+        <Card className="info-panel">
+          <CardHeader className="company-info-header">
+            <CardTitle>Project details</CardTitle>
+          </CardHeader>
+          <CardContent className="company-info-content">
+            <dl className="info-list">
+              <div>
+                <dt>Type</dt>
+                <dd>Security workflow product</dd>
+              </div>
+              <div>
+                <dt>Availability</dt>
+                <dd>Available privately</dd>
+              </div>
+              <div>
+                <dt>Capabilities</dt>
+                <dd>
+                  Assets, vulnerabilities, risk context, and compliance mapping
+                </dd>
+              </div>
+              <div>
+                <dt>Request</dt>
+                <dd>
+                  <a href="mailto:whois@shyenasec.com?subject=SecYourFlow%20demo%20request">
+                    Email to request a demo
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
       </section>
     </main>
   );

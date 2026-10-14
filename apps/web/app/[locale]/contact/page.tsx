@@ -1,3 +1,9 @@
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/design-system/components/ui/card";
 import type { Metadata } from "next";
 import { ContactForm } from "./components/contact-form";
 
@@ -8,7 +14,27 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-export default function ContactPage() {
+const inquiryTopics = new Set([
+  "Security services",
+  "Hardware VAPT",
+  "OT / ICS assessment",
+  "IoT security testing",
+  "SCADA network testing",
+  "Red team operations",
+  "Compliance & risk advisory",
+  "FlagForge",
+  "SecYourFlow demo",
+  "Other inquiry",
+]);
+
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string }>;
+}) {
+  const { topic } = await searchParams;
+  const initialTopic = topic && inquiryTopics.has(topic) ? topic : "";
+
   return (
     <main id="main">
       <section className="page-hero">
@@ -42,7 +68,14 @@ export default function ContactPage() {
             </div>
           </dl>
         </div>
-        <ContactForm />
+        <Card className="contact-form-card">
+          <CardHeader className="contact-form-card-header">
+            <CardTitle>Send an inquiry</CardTitle>
+          </CardHeader>
+          <CardContent className="contact-form-card-content">
+            <ContactForm initialTopic={initialTopic} />
+          </CardContent>
+        </Card>
       </section>
     </main>
   );

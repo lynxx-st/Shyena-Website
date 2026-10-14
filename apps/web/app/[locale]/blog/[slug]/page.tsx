@@ -1,3 +1,13 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/design-system/components/ui/breadcrumb";
+import { Button } from "@repo/design-system/components/ui/button";
+import { ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -56,18 +66,43 @@ export default async function JournalArticlePage({
     <main id="main">
       <section className="page-hero">
         <div className="article-head container">
-          <Link className="article-back" href="/blog">
-            ← Journal
-          </Link>
+          <Breadcrumb className="route-breadcrumb">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/blog">Journal</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{post.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <time className="journal-date" dateTime={post.date}>
             {formatDate(post.date)}
           </time>
+          <span aria-hidden="true" className="journal-meta-separator">
+            ·
+          </span>
+          <span className="journal-read-time">
+            {post.readingTimeMinutes} min read
+          </span>
           <h1>{post.title}</h1>
           <p>{post.description}</p>
         </div>
       </section>
       <article className="article-body">
         <Markdown source={post.body} />
+        <footer className="article-endnote">
+          <p>For a question about this article, write to</p>
+          <a href="mailto:whois@shyenasec.com">whois@shyenasec.com</a>
+          <Button asChild className="article-contact-button" variant="outline">
+            <Link href="/contact">
+              Discuss a security question <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </Button>
+        </footer>
       </article>
       <script
         // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON data is escaped before embedding.

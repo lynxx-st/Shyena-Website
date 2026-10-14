@@ -1,47 +1,40 @@
 "use client";
 
+import { Button } from "@repo/design-system/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@repo/design-system/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@repo/design-system/components/ui/sheet";
+import { ArrowUpRight, Menu, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
-
-const links = [
-  ["Home", "/"],
-  ["Services", "/#services"],
-  ["Projects", "/projects"],
-  ["Journal", "/blog"],
-  ["About", "/about"],
-] as const;
+import { useEffect, useState } from "react";
+import { navLinkGroups } from "../site-links";
 
 export const Header = () => {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const menuToggleRef = useRef<HTMLButtonElement>(null);
   const { resolvedTheme, setTheme } = useTheme();
-  const theme = mounted && resolvedTheme === "light" ? "light" : "dark";
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        menuToggleRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [open]);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const theme = mounted ? resolvedTheme : "dark";
+  const isActive = (href: string) =>
+    href.startsWith("/#") ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <header className="site-header">
@@ -58,55 +51,134 @@ export const Header = () => {
             Shyena Technologies<span>Pvt. Ltd.</span>
           </span>
         </Link>
-        <nav
-          aria-label="Main navigation"
-          className={open ? "nav-links is-open" : "nav-links"}
-          id="site-navigation"
-        >
-          {links.map(([label, href]) => {
-            const active =
-              !href.includes("#") &&
-              (href === "/" ? pathname === "/" : pathname.startsWith(href));
-            return (
-              <Link
-                aria-current={active ? "page" : undefined}
-                href={href}
-                key={label}
-                onClick={() => setOpen(false)}
-              >
-                {label}
-              </Link>
-            );
-          })}
-          <Link
-            className="nav-contact"
-            href="/contact"
-            onClick={() => setOpen(false)}
-          >
-            Contact <span aria-hidden="true">↗</span>
-          </Link>
-        </nav>
+
+        <NavigationMenu className="desktop-navigation" viewport={false}>
+          <NavigationMenuList className="nav-menu-list">
+            {navLinkGroups.map((group) => {
+              const active = group.links.some((link) => isActive(link.href));
+              return (
+                <NavigationMenuItem key={group.title}>
+                  <NavigationMenuTrigger
+                    className="nav-menu-trigger"
+                    data-active={active || undefined}
+                  >
+                    {group.title}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="nav-menu-content">
+                    <div className="nav-menu-content-inner">
+                      <p className="nav-menu-heading">{group.title}</p>
+                      {group.links.map((link) => (
+                        <NavigationMenuLink
+                          active={isActive(link.href)}
+                          asChild
+                          className="nav-menu-link"
+                          key={link.label}
+                        >
+                          <Link href={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      ))}
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              );
+            })}
+          </NavigationMenuList>
+        </NavigationMenu>
+
         <div className="header-actions">
-          <button
+          <Button
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
             className="theme-toggle"
-            onClick={toggleTheme}
-            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            size="icon"
+            variant="ghost"
           >
-            <span aria-hidden="true">{theme === "dark" ? "☼" : "◐"}</span>
-          </button>
-          <button
-            aria-controls="site-navigation"
-            aria-expanded={open}
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="menu-toggle"
-            onClick={() => setOpen(!open)}
-            ref={menuToggleRef}
-            type="button"
-          >
-            <span />
-            <span />
-          </button>
+            {theme === "dark" ? (
+              <Sun aria-hidden="true" />
+            ) : (
+              <Moon aria-hidden="true" />
+            )}
+          </Button>
+          <Button asChild className="nav-contact" size="sm">
+            <Link
+              aria-current={
+                pathname.startsWith("/contact") ? "page" : undefined
+              }
+              href="/contact"
+            >
+              Contact <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </Button>
+
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                aria-label="Open navigation menu"
+                className="mobile-menu-trigger"
+                size="icon"
+                variant="outline"
+              >
+                <Menu aria-hidden="true" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="mobile-navigation-sheet" side="right">
+              <SheetHeader className="mobile-navigation-heading">
+                <SheetTitle>Explore Shyena</SheetTitle>
+                <SheetDescription>
+                  Services, company information and resources.
+                </SheetDescription>
+              </SheetHeader>
+              <nav aria-label="Mobile navigation" className="mobile-nav-links">
+                {navLinkGroups.map((group) => (
+                  <section className="mobile-nav-group" key={group.title}>
+                    <h2>{group.title}</h2>
+                    {group.links.map((link) => (
+                      <SheetClose asChild key={link.label}>
+                        <Link
+                          aria-current={
+                            isActive(link.href) ? "page" : undefined
+                          }
+                          href={link.href}
+                        >
+                          {link.label}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </section>
+                ))}
+                <div className="mobile-theme-control">
+                  <span>Appearance</span>
+                  <Button
+                    aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+                    className="mobile-theme-toggle"
+                    onClick={() =>
+                      setTheme(theme === "dark" ? "light" : "dark")
+                    }
+                    size="sm"
+                    variant="outline"
+                  >
+                    {theme === "dark" ? (
+                      <Sun aria-hidden="true" />
+                    ) : (
+                      <Moon aria-hidden="true" />
+                    )}
+                    {theme === "dark" ? "Light theme" : "Dark theme"}
+                  </Button>
+                </div>
+                <SheetClose asChild>
+                  <Link
+                    aria-current={
+                      pathname.startsWith("/contact") ? "page" : undefined
+                    }
+                    className="mobile-nav-contact"
+                    href="/contact"
+                  >
+                    Contact <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </SheetClose>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

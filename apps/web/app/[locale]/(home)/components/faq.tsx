@@ -12,7 +12,7 @@ const questions = [
   {
     question: "What areas does Shyena work in?",
     answer:
-      "Our work spans software security, connected devices and hardware, and operational technology. We also build security products and practical learning experiences.",
+      "Our work includes hardware VAPT, OT / ICS assessment, IoT and SCADA testing, red team operations, and compliance and risk advisory. We also develop security products and practical learning experiences.",
   },
   {
     question: "Can I request a SecYourFlow demo?",
